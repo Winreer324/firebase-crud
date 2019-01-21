@@ -10,11 +10,11 @@ class CRUDMedthods {
 
   Future<void> addData(carData) async{
     if(isLoggedIn()){
-      Firestore.instance.collection("/testcrud").add(carData).catchError((e){
-        print(e);
-      });
+//      Firestore.instance.collection("testcrud").add(carData).catchError((e){
+//        print(e);
+//      });
 
-      Firestore.instance.runTransaction( (Transaction crud) async{
+      Firestore.instance.runTransaction( (Transaction crudTransaction) async{
         CollectionReference reference = await Firestore.instance.collection("testcrud");
 
         reference.add(carData);
@@ -26,6 +26,27 @@ class CRUDMedthods {
   }
 
   getData() async{
-    return await Firestore.instance.collection("testcrud").getDocuments();
+//    return await Firestore.instance.collection("testcrud").getDocuments();
+    return await Firestore.instance.collection("testcrud").snapshots();
+  }
+
+  updateData(selectedDoc, newValues){
+    Firestore.instance
+        .collection("testcrud")
+        .document(selectedDoc)
+        .updateData(newValues)
+        .catchError(
+      (e){print(e);
+    });
+  }
+
+  deleteData(docId){
+    Firestore.instance
+        .collection("testcrud")
+        .document(docId)
+        .delete()
+        .catchError((e){
+      print(e);
+     });
   }
 }
